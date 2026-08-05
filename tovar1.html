@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fake Kaspi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E31E2B;
+    --red-dark:#C4141F;
+    --red-tint:#FDECEC;
+    --ink:#171717;
+    --dim:#7A7A7A;
+    --line:#EDEDED;
+    --panel:#FAFAFA;
+    --white:#FFFFFF;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .page{
+    width:100%;
+    max-width:430px;
+    min-height:100vh;
+    padding:20px 18px 90px;
+    position:relative;
+  }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:26px;
+  }
+  .topbar .cat{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--red);
+  }
+
+  .app-head{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    margin-bottom:18px;
+  }
+  .app-icon{
+    width:84px;height:84px;
+    border-radius:20px;
+    object-fit:cover;
+    background:var(--panel);
+    border:1px solid var(--line);
+    box-shadow:0 10px 24px -10px rgba(227,30,43,0.35);
+    flex-shrink:0;
+  }
+  .app-meta{flex:1;min-width:0;padding-top:2px;}
+  .app-name{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    line-height:1.15;
+    margin:0 0 4px;
+  }
+  .app-sub{
+    font-size:12.5px;
+    color:var(--dim);
+    margin:0 0 10px;
+  }
+
+  .rule{height:1px;background:var(--line);margin:22px 0;}
+
+  .section-title{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:15px;
+    margin:0 0 12px;
+  }
+
+  .feature{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .feature:first-of-type{border-top:none;}
+  .feature-icon{
+    width:22px;height:22px;
+    background:transparent;
+    color:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    line-height:1;
+    margin-top:1px;
+  }
+  .feature-icon svg{
+    width:20px;height:20px;
+    display:block;
+  }
+  .feature-text .ft-title{font-size:13.5px;font-weight:600;margin-bottom:2px;}
+  .feature-text .ft-sub{font-size:12px;color:var(--dim);line-height:1.5;}
+
+  .plans{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:26px;
+  }
+  .plan{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--panel);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .plan.selected{
+    border-color:var(--red);
+    background:var(--red-tint);
+  }
+  .plan-left{display:flex;align-items:center;gap:12px;}
+  .radio{
+    width:19px;height:19px;
+    border-radius:50%;
+    border:2px solid #cfcfcf;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    transition:border-color .15s ease;
+  }
+  .plan.selected .radio{border-color:var(--red);}
+  .radio::after{
+    content:"";
+    width:9px;height:9px;
+    border-radius:50%;
+    background:var(--red);
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  .plan.selected .radio::after{opacity:1;}
+  .plan-name{font-size:14px;font-weight:700;}
+  .plan-note{font-size:11px;color:var(--dim);margin-top:1px;}
+  .plan-price{font-size:14.5px;font-weight:800;font-family:'Manrope',sans-serif;display:flex;align-items:baseline;gap:8px;flex-shrink:0;white-space:nowrap;}
+  .price-old{
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--dim);
+    text-decoration:line-through;
+    text-decoration-color:var(--red);
+    white-space:nowrap;
+  }
+  .price-free{color:var(--red);white-space:nowrap;}
+
+  .pay-btn{
+    width:100%;
+    background:var(--red);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    font-size:14.5px;
+    font-weight:700;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    transition:transform .1s ease, background .15s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .pay-btn:active{transform:scale(0.98);}
+  .pay-btn:hover{background:var(--red-dark);}
+  .pay-btn:disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+    transform:none;
+  }
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:var(--dim);
+    line-height:1.6;
+    margin-top:28px;
+    padding:0 10px;
+  }
+
+  .sheet-overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.25);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+    z-index:45;
+  }
+  .sheet-overlay.open{opacity:1;pointer-events:auto;}
+
+  .sheet{
+    position:fixed;
+    top:50%;left:50%;
+    width:calc(100% - 40px);
+    max-width:380px;
+    max-height:calc(100vh - 40px);
+    overflow-y:auto;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:22px 20px calc(20px + env(safe-area-inset-bottom));
+    transform:translate(-50%,-50%) scale(0.94);
+    opacity:0;
+    pointer-events:none;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
+    z-index:46;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.35);
+  }
+  .sheet.open{
+    transform:translate(-50%,-50%) scale(1);
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  .sheet-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;background:#229ED9;color:#fff;text-decoration:none;
+    border-radius:12px;padding:14px;font-weight:700;font-size:14px;margin-bottom:10px;
+  }
+  .sheet-close{
+    display:block;width:100%;background:transparent;
+    border:1.5px solid var(--line);color:var(--dim);
+    border-radius:12px;padding:12px;font-size:13px;cursor:pointer;
+  }
+  .pay-info{
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--dim);
+    margin:0 0 14px;
+  }
+
+  .device-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-height:min(52vh, 360px);
+    overflow-y:auto;
+    margin-bottom:16px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .device-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    background:var(--panel);
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .device-item.selected{
+    border-color:var(--red);
+    background:var(--red-tint);
+  }
+  .device-item .d-radio{
+    width:18px;height:18px;
+    border-radius:50%;
+    border:2px solid #cfcfcf;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s ease;
+  }
+  .device-item.selected .d-radio{border-color:var(--red);}
+  .device-item .d-radio::after{
+    content:"";
+    width:8px;height:8px;
+    border-radius:50%;
+    background:var(--red);
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  .device-item.selected .d-radio::after{opacity:1;}
+  .device-item .d-name{
+    font-size:13.5px;
+    font-weight:600;
+  }
+
+  .success-overlay{
+    position:fixed;inset:0;
+    background:rgba(255,255,255,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:60;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .success-overlay.show{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .check-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    transform:translateY(80px);
+    opacity:0;
+  }
+  .success-overlay.show .check-wrap{
+    animation:checkPop 0.7s cubic-bezier(.2,.9,.3,1.2) forwards;
+  }
+  @keyframes checkPop{
+    0%{ transform:translateY(80px) scale(0.6); opacity:0; }
+    55%{ transform:translateY(-12px) scale(1.08); opacity:1; }
+    75%{ transform:translateY(4px) scale(0.97); }
+    100%{ transform:translateY(0) scale(1); opacity:1; }
+  }
+  .check-circle{
+    width:72px;height:72px;
+    border-radius:50%;
+    background:var(--red);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 12px 28px -8px rgba(227,30,43,0.45);
+  }
+  .check-circle svg{width:34px;height:34px;}
+  .check-label{
+    font-family:'Manrope',sans-serif;
+    font-weight:800;
+    font-size:16px;
+    color:var(--ink);
+  }
+
+  .toast{
+    position:fixed;
+    left:50%;bottom:90px;
+    transform:translateX(-50%) translateY(10px);
+    background:var(--ink);
+    color:#fff;
+    font-size:12.5px;
+    padding:10px 16px;
+    border-radius:10px;
+    opacity:0;
+    pointer-events:none;
+    transition:all .2s ease;
+    z-index:50;
+    max-width:88%;
+    text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <span class="cat">Приложение</span>
+  </div>
+
+  <div class="app-head">
+    <img class="app-icon" src="https://i.ibb.co/TB6sCNg1/unnamed.png" alt="Fake Kaspi">
+    <div class="app-meta">
+      <h1 class="app-name">Fake Kaspi</h1>
+      <p class="app-sub">Доступ выдаётся автоматически</p>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <h2 class="section-title">Описание</h2>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 4h7l3 3v13H8V4z"/><path d="M15 4v3h3"/><path d="M5 8h1v12h9"/><path d="M11 12h4M11 15h3"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Права</div>
+        <div class="ft-sub">Водительские права</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11.5V16c0 1.5 2.5 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 9v6"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Студенческий</div>
+        <div class="ft-sub">Студенческий билет</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 3h7l4 4v14H7V3z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Старый формат УДО</div>
+        <div class="ft-sub">Классический вид удостоверения</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.2"/><path d="M13 10.5h5M13 13.5h3.5"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Новый формат УДО</div>
+        <div class="ft-sub">Актуальный дизайн удостоверения</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.5A8 8 0 1 1 10.5 4 6.5 6.5 0 0 0 20 14.5z"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Тёмный режим</div>
+        <div class="ft-sub">Удобный интерфейс в тёмной теме</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Смена языка</div>
+        <div class="ft-sub">Переключение языка интерфейса</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Накручиваемый баланс</div>
+        <div class="ft-sub">Гибкая настройка отображаемого баланса</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <h2 class="section-title">Что входит</h2>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Мгновенная выдача</div>
+        <div class="ft-sub">Доступ приходит автоматически после подтверждения</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 5h16v11H8l-4 3.5V5z"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Поддержка 24/7</div>
+        <div class="ft-sub">Менеджер на связи в Telegram по любым вопросам</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 13l2.5 2.5a2 2 0 0 0 2.8 0l3.2-3.2a2 2 0 0 0 0-2.8L17 7"/>
+          <path d="M13 11L10.5 8.5a2 2 0 0 0-2.8 0L4.5 11.7a2 2 0 0 0 0 2.8L7 17"/>
+          <path d="M8 12l2 2 4-4"/>
+          <path d="M3 11l2-2M21 13l-2 2"/>
+        </svg>
+      </div>
+      <div class="feature-text">
+        <div class="ft-title">Просто и быстро</div>
+        <div class="ft-sub">Никаких сложных шагов — доступ по одной кнопке</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <h2 class="section-title">Тариф</h2>
+  <div class="plans">
+    <div class="plan selected" data-code="forever" data-period="Навсегда">
+      <div class="plan-left">
+        <div class="radio"></div>
+        <div>
+          <div class="plan-name">Навсегда</div>
+          <div class="plan-note">Доступ без ограничения по времени</div>
+        </div>
+      </div>
+      <div class="plan-price">
+        <span class="price-old">2&nbsp;500&nbsp;₸</span>
+        <span class="price-free">Бесплатно</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="pay-btn" id="getMainBtn">Получить</button>
+
+  <footer>
+    Нажимая «Получить», выберите устройство и получите доступ.
+  </footer>
+</div>
+
+<!-- 1) Выбор устройства -->
+<div class="sheet-overlay" id="deviceOverlay"></div>
+<div class="sheet" id="deviceSheet">
+  <h2 class="section-title" style="margin-bottom:6px;">Выберите устройство</h2>
+  <p class="pay-info" style="margin-bottom:12px;">Поддерживаемые устройства</p>
+  <div class="device-list" id="deviceList"></div>
+  <button class="pay-btn" id="deviceNextBtn" disabled>Далее</button>
+  <button class="sheet-close" id="deviceClose" style="margin-top:10px;">Закрыть</button>
+</div>
+
+<!-- 2) Успех: красный круг + белая галка -->
+<div class="success-overlay" id="successOverlay">
+  <div class="check-wrap">
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="check-label">Готово!</div>
+  </div>
+</div>
+
+<!-- 3) Связаться в Telegram -->
+<div class="sheet-overlay" id="tgOverlay"></div>
+<div class="sheet" id="tgSheet">
+  <h2 class="section-title" style="margin-bottom:10px;">Свяжитесь с менеджером</h2>
+  <p class="pay-info" id="tgInfo">
+    Нажмите кнопку ниже — откроется Telegram с готовым сообщением по вашему устройству.
+  </p>
+  <a class="sheet-btn" id="tgLink" href="https://t.me/FakeKaspiManager" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21.5 3.5L2.5 11l6 2.2m13-9.7L16 20.5l-7.5-7.3m13-9.7L8.5 13.2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    Написать в Telegram
+  </a>
+  <button class="sheet-close" id="tgClose">Закрыть</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEVICES = [
+  'iPhone X','iPhone XR','iPhone XS','iPhone XS Max',
+  'iPhone 11','iPhone 11 Pro','iPhone 11 Pro Max',
+  'iPhone 12','iPhone 12 mini','iPhone 12 Pro','iPhone 12 Pro Max',
+  'iPhone 13','iPhone 13 mini','iPhone 13 Pro','iPhone 13 Pro Max',
+  'iPhone 14','iPhone 14 Plus','iPhone 14 Pro','iPhone 14 Pro Max',
+  'iPhone 15','iPhone 15 Plus','iPhone 15 Pro','iPhone 15 Pro Max',
+  'iPhone 16','iPhone 16 Plus','iPhone 16 Pro','iPhone 16 Pro Max',
+  'iPhone 17','iPhone 17 Pro','iPhone 17 Pro Max'
+];
+
+const TG_USER = 'FakeKaspiManager';
+let selectedDevice = null;
+
+const deviceList = document.getElementById('deviceList');
+DEVICES.forEach((name) => {
+  const el = document.createElement('div');
+  el.className = 'device-item';
+  el.dataset.name = name;
+  el.innerHTML = `<div class="d-radio"></div><div class="d-name">${name}</div>`;
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.device-item').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDevice = name;
+    document.getElementById('deviceNextBtn').disabled = false;
+  });
+  deviceList.appendChild(el);
+});
+
+function openSheet(overlayId, sheetId){
+  document.getElementById(overlayId).classList.add('open');
+  document.getElementById(sheetId).classList.add('open');
+}
+function closeSheet(overlayId, sheetId){
+  document.getElementById(overlayId).classList.remove('open');
+  document.getElementById(sheetId).classList.remove('open');
+}
+
+document.getElementById('getMainBtn').addEventListener('click', () => {
+  selectedDevice = null;
+  document.querySelectorAll('.device-item').forEach(x => x.classList.remove('selected'));
+  document.getElementById('deviceNextBtn').disabled = true;
+  openSheet('deviceOverlay','deviceSheet');
+});
+document.getElementById('deviceClose').addEventListener('click', () => closeSheet('deviceOverlay','deviceSheet'));
+document.getElementById('deviceOverlay').addEventListener('click', () => closeSheet('deviceOverlay','deviceSheet'));
+
+document.getElementById('deviceNextBtn').addEventListener('click', () => {
+  if(!selectedDevice) return;
+  closeSheet('deviceOverlay','deviceSheet');
+
+  const success = document.getElementById('successOverlay');
+  success.classList.add('show');
+
+  setTimeout(() => {
+    success.classList.remove('show');
+    const msg = `Здравствуйте! Хочу получить доступ. Моё устройство: ${selectedDevice}`;
+    const url = `https://t.me/${TG_USER}?text=${encodeURIComponent(msg)}`;
+    document.getElementById('tgLink').href = url;
+    document.getElementById('tgInfo').textContent =
+      `Вы выбрали ${selectedDevice}. Нажмите кнопку — откроется Telegram с готовым сообщением.`;
+    openSheet('tgOverlay','tgSheet');
+  }, 1400);
+});
+
+document.getElementById('tgClose').addEventListener('click', () => closeSheet('tgOverlay','tgSheet'));
+document.getElementById('tgOverlay').addEventListener('click', () => closeSheet('tgOverlay','tgSheet'));
+</script>
+
+</body>
+</html>
